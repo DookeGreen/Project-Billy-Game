@@ -1312,6 +1312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootSFX: {fileID: 8300000, guid: 5cd734efe0eb33742a1ef3c931ec5052, type: 3}
   reloadSFX: {fileID: 8300000, guid: 796c7fccb2ac797409e6374c19b9a322, type: 3}
+  sixShootSFX: {fileID: 8300000, guid: 9d2d58bb66736414a827a19f41900cf3, type: 3}
   ShakeFX: {fileID: 557063978}
   ShakeDur: 0.25
   bulletPrefab: {fileID: 5388488327341714025, guid: 0523e03c141bb044ebe980f518659148, type: 3}

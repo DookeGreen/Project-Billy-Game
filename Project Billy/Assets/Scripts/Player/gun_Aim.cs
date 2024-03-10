@@ -8,6 +8,7 @@ public class gun_Aim : MonoBehaviour
 {
     [SerializeField] private AudioClip shootSFX;
     [SerializeField] private AudioClip reloadSFX;
+    [SerializeField] private AudioClip sixShootSFX;
     [SerializeField] CinemachineVirtualCamera ShakeFX;
     [Range(0.1f, 2f)]
     [SerializeField] private float ShakeDur;
@@ -27,6 +28,8 @@ public class gun_Aim : MonoBehaviour
     private Vector2 mousePos;
     private float fireTimer;
     private int reloadPlay;
+    private bool canSixShooter = true;
+    private bool sixShooterActive;
 
     private void Start()
     {
@@ -50,10 +53,29 @@ public class gun_Aim : MonoBehaviour
             reloadPlay = 0;
             ammoanim.animDone = false;
         }
+        if(Input.GetKeyDown("e"))
+        {
+            sixShooterActive = true;
+        }
         if (Input.GetMouseButtonDown(0) && fireTimer <= 0f && currentBullets != 0)
         {
-            Shoot();
-            fireTimer = fireRate;
+            if(sixShooterActive && canSixShooter)
+            {
+                sixShooterActive = false;
+                canSixShooter = false;
+                SixShoot();
+            }
+            else
+            {
+                canSixShooter = false;
+                Shoot();
+                fireTimer = fireRate;
+            }
+        }
+        else if(Input.GetKeyDown("r"))
+        {
+            anim.enabled = true;
+            Reload();
         }
         else if (currentBullets == 0)
         {
@@ -100,16 +122,33 @@ public class gun_Aim : MonoBehaviour
             image.sprite = (sprites[5]);
         }
     }
+    void SixShoot()
+    {
+        SoundFXManager.instance.PlaySoundFXClip(sixShootSFX, transform, 1f);
+        StopAllCoroutines();
+        StartCoroutine(SixShooting());
+    }
     IEnumerator Shake(float t)
     {
         ShakeFX.Priority = 11;
         yield return new WaitForSeconds(t);
         ShakeFX.Priority = 9;
     }
+    IEnumerator SixShooting()
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            StartCoroutine(Shake(ShakeDur));
+            Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+            currentBullets -=1;
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
     private void Reload()
     {
         if(reloadPlay == 0)
         {
+            canSixShooter = true;
             SoundFXManager.instance.PlaySoundFXClip(reloadSFX, transform, 1f);
             reloadPlay += 1;
         }
