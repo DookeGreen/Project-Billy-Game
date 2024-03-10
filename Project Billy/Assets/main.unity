@@ -780,7 +780,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!114 &879083910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,8 +793,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0996ff6db0397894c84779e1b2d2f6de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  movementSpeed: 3
   anim: {fileID: 879083914}
+  rb: {fileID: 879083909}
 --- !u!61 &879083911
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1312,7 +1313,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootSFX: {fileID: 8300000, guid: 5cd734efe0eb33742a1ef3c931ec5052, type: 3}
   reloadSFX: {fileID: 8300000, guid: 796c7fccb2ac797409e6374c19b9a322, type: 3}
-  sixShootSFX: {fileID: 8300000, guid: 9d2d58bb66736414a827a19f41900cf3, type: 3}
+  fastCockSFX: {fileID: 8300000, guid: 0147c44b232727b468a73b0819229186, type: 3}
+  shootRawSFX: {fileID: 8300000, guid: 331cc1e460cb5de49bb3a8e547aebf39, type: 3}
+  revolverSpinSFX: {fileID: 8300000, guid: d4d3faf786af2d146a8e3228bc56e397, type: 3}
   ShakeFX: {fileID: 557063978}
   ShakeDur: 0.25
   bulletPrefab: {fileID: 5388488327341714025, guid: 0523e03c141bb044ebe980f518659148, type: 3}

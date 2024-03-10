@@ -8,7 +8,9 @@ public class gun_Aim : MonoBehaviour
 {
     [SerializeField] private AudioClip shootSFX;
     [SerializeField] private AudioClip reloadSFX;
-    [SerializeField] private AudioClip sixShootSFX;
+    [SerializeField] private AudioClip fastCockSFX;
+    [SerializeField] private AudioClip shootRawSFX;
+    [SerializeField] private AudioClip revolverSpinSFX;
     [SerializeField] CinemachineVirtualCamera ShakeFX;
     [Range(0.1f, 2f)]
     [SerializeField] private float ShakeDur;
@@ -55,7 +57,8 @@ public class gun_Aim : MonoBehaviour
         }
         if(Input.GetKeyDown("e"))
         {
-            sixShooterActive = true;
+            SoundFXManager.instance.PlaySoundFXClip(revolverSpinSFX, transform, 1f);
+            sixShooterActive = !sixShooterActive;
         }
         if (Input.GetMouseButtonDown(0) && fireTimer <= 0f && currentBullets != 0)
         {
@@ -67,7 +70,6 @@ public class gun_Aim : MonoBehaviour
             }
             else
             {
-                canSixShooter = false;
                 Shoot();
                 fireTimer = fireRate;
             }
@@ -124,7 +126,6 @@ public class gun_Aim : MonoBehaviour
     }
     void SixShoot()
     {
-        SoundFXManager.instance.PlaySoundFXClip(sixShootSFX, transform, 1f);
         StopAllCoroutines();
         StartCoroutine(SixShooting());
     }
@@ -136,12 +137,15 @@ public class gun_Aim : MonoBehaviour
     }
     IEnumerator SixShooting()
     {
-        for(int i = 0; i < 6; i++)
+        for(int i = currentBullets; i > 0; i--)
         {
             StartCoroutine(Shake(ShakeDur));
             Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             currentBullets -=1;
-            yield return new WaitForSeconds(0.2f);
+            SoundFXManager.instance.PlaySoundFXClip(shootRawSFX, transform, 1f);
+            yield return new WaitForSeconds(0.1f);
+            SoundFXManager.instance.PlaySoundFXClip(fastCockSFX, transform, 1f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
     private void Reload()
