@@ -24,6 +24,7 @@ public class gun_Aim : MonoBehaviour
     [SerializeField] private GameObject bar;
     [SerializeField] Sprite[] sprites;
     [SerializeField] AmmoAnimHandler ammoanim;
+    [SerializeField] player_Contoller pc;
 
     Image image = null;
     private int currentBullets;
@@ -60,7 +61,7 @@ public class gun_Aim : MonoBehaviour
             SoundFXManager.instance.PlaySoundFXClip(revolverSpinSFX, transform, 1f);
             sixShooterActive = !sixShooterActive;
         }
-        if (Input.GetMouseButtonDown(0) && fireTimer <= 0f && currentBullets != 0)
+        if (Input.GetMouseButtonDown(0) && fireTimer <= 0f && currentBullets != 0 && pc.dodging == false)
         {
             if(sixShooterActive && canSixShooter)
             {
