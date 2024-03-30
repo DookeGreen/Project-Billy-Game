@@ -6,9 +6,12 @@ public class player_Contoller : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 2f;
     [SerializeField] private Animator anim;
+    [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Rigidbody2D rb;
     [Range(0.1f, 10f)]
     [SerializeField] private float dodgeForce;
+    [Range(0.1f, 10f)]
+    [SerializeField] private float dodgeTime;
     [SerializeField] private string enemyLayerName;
     [SerializeField] private GameObject dodgeOBJ;
     [Range(50f, 250f)]
@@ -17,12 +20,15 @@ public class player_Contoller : MonoBehaviour
     [SerializeField] private float dodgeCost;
     [Range(0f, 20f)]
     [SerializeField] private float dodgeRegen;
+    [SerializeField] private BoxCollider2D box1;
+    [SerializeField] private BoxCollider2D box2;
     private float currentStamina;
     private Vector2 mousePos;
     private Vector2 movement;
     private Vector3 lastPosition;
     private Vector3 movementDirection;
     private int count;
+    [SerializeField] private BoolScriptableObject iframe;
     public bool dodging;
     private float staminaTimer;
 
@@ -64,7 +70,6 @@ public class player_Contoller : MonoBehaviour
         currentStamina -= dodgeCost;
         dodging = true;
         int enemyLayer = LayerMask.NameToLayer(enemyLayerName);
-        Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, true);
 
         // Calculate dodge direction based on object's rotation
         Vector2 dodgeDirection = (Vector2)(Quaternion.Euler(0, 0, dodgeOBJ.transform.eulerAngles.z) * Vector2.up);
@@ -74,15 +79,24 @@ public class player_Contoller : MonoBehaviour
 
         float timeElapsed = 0f;
 
-        while (timeElapsed < 0.5f)
+        while (timeElapsed < dodgeTime)
         {
+            if(timeElapsed > dodgeTime/4 && timeElapsed < 2 * (dodgeTime/3))
+            {
+                iframe.iframe = true;
+                sr.color = new Color(0, 0, 0);
+            }
+            else
+            {
+                iframe.iframe = false;
+                sr.color = new Color(255, 255, 255);
+            }
             rb.MovePosition(Vector2.Lerp(transform.position, dodgeTargetPosition, timeElapsed / 0.5f));
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
         // Re-enable collision with the enemy layer after dodge
-        Physics2D.IgnoreLayerCollision(gameObject.layer, enemyLayer, false);
         dodging = false;
     }
 

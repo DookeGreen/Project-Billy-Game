@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class gun_Aim : MonoBehaviour
 {
@@ -11,7 +11,6 @@ public class gun_Aim : MonoBehaviour
     [SerializeField] private AudioClip fastCockSFX;
     [SerializeField] private AudioClip shootRawSFX;
     [SerializeField] private AudioClip revolverSpinSFX;
-    [SerializeField] CinemachineVirtualCamera ShakeFX;
     [Range(0.1f, 2f)]
     [SerializeField] private float ShakeDur;
     [SerializeField] private GameObject bulletPrefab;
@@ -25,6 +24,7 @@ public class gun_Aim : MonoBehaviour
     [SerializeField] Sprite[] sprites;
     [SerializeField] AmmoAnimHandler ammoanim;
     [SerializeField] player_Contoller pc;
+    [SerializeField] private CinemachineImpulseSource impulseSource;
 
     Image image = null;
     private int currentBullets;
@@ -38,7 +38,6 @@ public class gun_Aim : MonoBehaviour
     {
         anim.enabled = false;
         currentBullets = maxBullets;
-        ShakeFX.Priority = 9;
         image = bar.GetComponent<Image>();
     }
     private void Update()
@@ -92,9 +91,9 @@ public class gun_Aim : MonoBehaviour
     }
     private void Shoot()
     {
+        impulseSource.GenerateImpulse(transform.up * 0.2f);
         SoundFXManager.instance.PlaySoundFXClip(shootSFX, transform, 1f);
-        StopAllCoroutines();
-        StartCoroutine(Shake(ShakeDur));
+        ScreenShakeManager.instance.PlayScreenShake(transform, ShakeDur);
         Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
         currentBullets -=1;
     }
@@ -130,17 +129,12 @@ public class gun_Aim : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(SixShooting());
     }
-    IEnumerator Shake(float t)
-    {
-        ShakeFX.Priority = 11;
-        yield return new WaitForSeconds(t);
-        ShakeFX.Priority = 9;
-    }
     IEnumerator SixShooting()
     {
         for(int i = currentBullets; i > 0; i--)
         {
-            StartCoroutine(Shake(ShakeDur));
+            impulseSource.GenerateImpulse(transform.up * 0.2f);
+            ScreenShakeManager.instance.PlayScreenShake(transform, ShakeDur);
             Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
             currentBullets -=1;
             SoundFXManager.instance.PlaySoundFXClip(shootRawSFX, transform, 1f);
